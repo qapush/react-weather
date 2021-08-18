@@ -37,13 +37,8 @@
   }
 }
 
-.cards {
-  display: flex;
-  flex-wrap: wrap;
-}
 
-.card {
-  margin: 1em;
-  padding: 1em;
-  border: 1px solid grey;
+.app-title{
+  font-family: 'Aleo', serif;
+  font-weight: bold;
 }

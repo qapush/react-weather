@@ -1,0 +1,29 @@
+.weather-card {
+    background: rgb(8 161 237 / 21%);
+    box-shadow: none;
+    transition-duration: 0.3s;
+}
+
+.weather-card:hover {
+    box-shadow: rgba(128, 128, 128, 0.3) 0px 0.5em 2rem;
+}
+
+.card__image {
+    margin:auto;
+}
+
+.card__day {
+    font-weight: bold;
+}
+
+.temp-max {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: rgb(200, 0, 0);
+}
+
+.temp-min {
+    font-size: 1rem;
+    font-weight: bold;
+    color: rgb(230, 133, 95);
+}

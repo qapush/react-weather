@@ -1,6 +1,8 @@
 import { Component } from 'react';
 import './App.css';
 import Weather from './services';
+import { Container, Row, Col } from 'reactstrap';
+import Card from './components/card';
 
 export default class App extends Component {
 
@@ -16,7 +18,6 @@ export default class App extends Component {
   }
   
   updateWeather(){
-
 
     this.weather.sixteenDaysForecast()
         .then(res => console.log(res.data[1]));
@@ -34,34 +35,35 @@ export default class App extends Component {
 
     return (
      <>
-        <h1>Weather</h1>
-        { loading ? null : <List data={ this.state.data } /> }
+       <Container>
+        <Row>
+          <Col className="text-center">
+            <h1 className="app-title m-5">Prognoza pogody:</h1>
+          </Col>
+        </Row>
+        <Row>
+          { loading ? null : <Cards data={ this.state.data } /> }
+        </Row>
+       </Container>
      </>
      );
   }
 }
 
-const List = ({data}) => {
+const Cards = ({data}) => {
   
   const days = data.map((item, index) => {
     return(
-      <div className="card" key={index}>
-        <h3>{item.valid_date}</h3>
-        <hr />
-        <p style={{color:"blue", textAlign:"center"}}>{ item.weather.description }</p>
-        <img src={`${process.env.PUBLIC_URL}/icons/${ item.weather.icon }.png`} alt="icon" />
-        <p>Max temp: <span style={{fontWeight:"bold"}}>{ item.max_temp }</span></p>
-        <p>Min temp: <span style={{fontWeight:"bold"}}>{ item.min_temp }</span></p>
-      </div>
+      <Card 
+        key={ index }
+        item={ item } 
+      />
     )
   })
   
   return(
     <>
-      <h2>A List:</h2>
-     <div className="cards">
       { days }
-     </div>
     </>
   )
 
