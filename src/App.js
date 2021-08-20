@@ -10,16 +10,39 @@ export default class App extends Component {
   state = {
     data: null,
     loading: true,
-    placeCoordinates: null
+    placeCoordinates: null,
+    localCoordinatesInUse: false
   }
 
   weather = new Weather();
 
   componentDidMount(){
-    // this.updateWeather()
+
+    let options = {
+      enableHighAccuracy: true,
+      timeout: 5000,
+      maximumAge: 0
+    };
+
+    let success = (pos) => {
+      let lat = pos.coords.latitude,
+          lng = pos.coords.longitude;
+      this.setState({
+        localCoordinatesInUse: true
+      })   
+      this.updateWeather(lat, lng);
+      // console.log(this);
+    }
+    
+    function error(err) {
+      console.warn(`ERROR(${err.code}): ${err.message}`);
+    }
+    
+    navigator.geolocation.getCurrentPosition(success, error, options);
+
   }
   
-  updateWeather(lat, lng){
+  updateWeather = (lat, lng) => {
 
     // this.weather.sixteenDaysForecast()
     //     .then(res => console.log(res.data[1]));
@@ -33,7 +56,8 @@ export default class App extends Component {
 
   placeSelectedHandler = (selectedPlace) => {
     this.setState({
-      placeCoordinates: selectedPlace
+      placeCoordinates: selectedPlace,
+      localCoordinatesInUse: false
     })
 
     // console.log(selectedPlace);
@@ -45,13 +69,14 @@ export default class App extends Component {
   }
 
   render(){
-    const { loading } = this.state;
+    const { loading, localCoordinatesInUse } = this.state;
 
     return (
      <>
        <Container>
         <Row>
           <Col className="text-center">
+            <h1 className="mt-5">Prognoza pogody dla {localCoordinatesInUse ? "bieżącej lokalizaji" : ":"}</h1>
            { this.state.placeCoordinates ? <h2 className="m-5 mb-0">{this.state.placeCoordinates.formatted_address}</h2> : null}
           </Col>
         </Row>
