@@ -17,17 +17,23 @@ import PlacesAutocomplete, {
       geocodeByAddress(address)
         .then(results => this.props.onPlaceSelected(results[0]))
         // .then(results => getLatLng(results[0]))
-        // .then(latLng => console.log('Success', latLng))
+        // .then(results => console.log(results[0]))
         // .then(latLng => this.props.onPlaceSelected(latLng))
         .catch(error => console.error('Error', error));
     };
    
     render() {
+
+      const searchOptions = {
+        types: [('(cities)')]
+      }
+
       return (
         <PlacesAutocomplete
           value={this.state.address}
           onChange={this.handleChange}
           onSelect={this.handleSelect}
+          searchOptions={searchOptions}
         >
           {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
             <div>
