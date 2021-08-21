@@ -1,4 +1,6 @@
 import { Component } from 'react';
+import './locationLookup.css';
+
 import PlacesAutocomplete, {
     geocodeByAddress,
   } from 'react-places-autocomplete';
@@ -6,7 +8,8 @@ import PlacesAutocomplete, {
   export default class LocationSearchInput extends Component {
     constructor(props) {
       super(props);
-      this.state = { address: '' };
+      this.state = { address:'' };
+      
     }
    
     handleChange = address => {
@@ -14,13 +17,15 @@ import PlacesAutocomplete, {
     };
    
     handleSelect = address => {
+      this.setState({
+        address:''
+      })
       geocodeByAddress(address)
         .then(results => this.props.onPlaceSelected(results[0]))
-        // .then(results => getLatLng(results[0]))
-        // .then(results => console.log(results[0]))
-        // .then(latLng => this.props.onPlaceSelected(latLng))
         .catch(error => console.error('Error', error));
     };
+
+    
    
     render() {
 
@@ -39,12 +44,12 @@ import PlacesAutocomplete, {
             <div>
               <input
                 {...getInputProps({
-                  placeholder: 'Prognoza pogody dla...',
+                  placeholder: 'Szukaj...',
                   className: 'location-search-input',
                 })}
               />
               <div className="autocomplete-dropdown-container">
-                {loading && <div>Loading...</div>}
+                {/* {loading && <div>Loading...</div>} */}
                 {suggestions.map((suggestion, index )=> {
                   const className = suggestion.active
                     ? 'suggestion-item--active'

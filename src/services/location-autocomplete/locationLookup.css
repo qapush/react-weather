@@ -1,0 +1,42 @@
+
+input {
+    font-size: 1.2rem;
+    padding: 1rem;
+    border-radius: 0px;
+    border: none;
+    background-color: pink;
+    color: black;
+    font-weight: bold;
+    width: 100%;
+    text-align: center;
+}
+
+input:focus, border:focus-visible {
+    border: none;
+    outline: none;
+   
+}
+
+.suggestion-item, .suggestion-item--active  {
+    padding: 1rem;
+    color: black;
+    font-weight: bold;
+    border: none;
+    text-align: center;
+}
+
+.suggestion-item:not(:last-child) {
+    border-bottom: 2px solid white;
+}
+
+.suggestion-item--active:not(:last-child) {
+    border-bottom: 2px solid white;
+}
+
+.suggestion-item {
+    background-color: pink !important;
+}
+
+.suggestion-item--active {
+    background-color: rgb(8 161 237 / 15%) !important;
+}

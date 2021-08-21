@@ -1,0 +1,24 @@
+.place-header {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(8,161,237, 0.15);
+    padding-left: 2rem;
+    max-width: 500px;
+    margin: 2rem auto 0px auto;
+
+}
+
+.place-header__description h2 {
+    color: #752c40;
+    font-weight: bold;
+}
+
+.place-header__image {
+    background-image: url('https://maps.googleapis.com/maps/api/place/photo?photo_reference=Aap_uEDJuJrffFqWnuv65cU8rhrwgatDKIiIzBv8l2Dl6OchEzTgW0zl2Qf0HirINZ-7Oj6BzwhBF3I-iReYPmCV2_svtEE__t5qO8mAMeoYbYxMBxlwgJkL7KnIfjDRvLik_w7qyZo-PDny9WFBLACJ3m9mcewuJBhcTkSK-mALzPcSZu1w&maxwidth=400&key=AIzaSyBhXGs0sQKWcCmNeCnIdVaQAb8oUXbbTeQ');
+    height: 150px;
+    width: 150px;
+    background-position: center;
+    background-size: cover;
+}

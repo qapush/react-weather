@@ -1,8 +1,10 @@
 import { Component } from 'react';
 import './app.css';
 import Weather from '../../services/get-weather';
-import LocationSearchInput from '../../services/location-lookup';
+import LocationSearchInput from '../../services/location-autocomplete';
+import Places from '../../services/places-api';
 import { Container, Row, Col } from 'reactstrap';
+import PlaceHeader from '../place-header';
 import Card from '../card';
 
 export default class App extends Component {
@@ -11,10 +13,13 @@ export default class App extends Component {
     data: null,
     loading: true,
     placeCoordinates: null,
-    localCoordinatesInUse: false
+    localCoordinatesInUse: false,
+    placePhotoRef: null,
+    ak: null
   }
 
   weather = new Weather();
+  places = new Places();
 
   componentDidMount(){
 
@@ -40,11 +45,11 @@ export default class App extends Component {
     navigator.geolocation.getCurrentPosition(success, error, options);
 
   }
+
+  componentDidUpdate(){
+  }
   
   updateWeather = (lat, lng) => {
-
-    // this.weather.sixteenDaysForecast()
-    //     .then(res => console.log(res.data[1]));
 
     this.weather.sixteenDaysForecast(lat, lng)
         .then(res => this.setState({
@@ -59,26 +64,37 @@ export default class App extends Component {
       localCoordinatesInUse: false
     })
 
-    console.log(selectedPlace.address_components);
+    
+    this.places.getPhotoUrl(selectedPlace.place_id)
+        .then(resp => this.setState({
+          placePhotoRef: resp.result.photos[0].photo_reference,
+          ak: this.places.ak
+        }));
+        // .then(resp => console.log(resp));
 
     const lat = selectedPlace.geometry.location.lat()
     const lng = selectedPlace.geometry.location.lng()
-
     this.updateWeather(lat, lng);
+
+
+    
   }
 
   render(){
 
-    const { loading, localCoordinatesInUse, placeCoordinates } = this.state;
+    const { loading, placePhotoRef, ak, placeCoordinates } = this.state;
     
 
-    let title = 'Prognoza pogody dla ';
+    let url, place;
 
     if(placeCoordinates) {
       const { address_components } = placeCoordinates;
-      title += address_components[0].long_name;
-    } else {
-      title += 'bieżącej lokalizaji'
+      place = address_components[0].long_name;
+    };
+
+    
+    if(placePhotoRef){
+      url = `https://maps.googleapis.com/maps/api/place/photo?photo_reference=${placePhotoRef}&maxwidth=400&key=${ak}`
     }
 
     return (
@@ -86,7 +102,8 @@ export default class App extends Component {
        <Container>
         <Row>
           <Col className="text-center">
-          <h1 className="mt-5">{title}</h1>
+            { this.state.placePhotoRef ? <Img placePhotoRef={this.state.placePhotoRef} ak={this.state.ak}/> : null }
+          { placePhotoRef ? <PlaceHeader url={url} place={ place }/> : null }
           </Col>
         </Row>
         <Row>
@@ -120,5 +137,16 @@ const Cards = ({data}) => {
     </>
   )
 
+}
+
+const Img = ({placePhotoRef, ak}) => {
+  let url = `https://maps.googleapis.com/maps/api/place/photo?photo_reference=${placePhotoRef}&maxwidth=400&key=${ak}`
+   return(
+    <div 
+      style={{ "backgroundImage":`url('${url}')` }}
+      className="place-image"
+    >
+    </div>
+   )
 }
 
