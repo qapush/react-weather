@@ -13,7 +13,7 @@ export default class Weather {
         }
         
         return await res.json(); 
-
+ 
     }
 
 }

@@ -43,6 +43,11 @@
   font-weight: bold;
 }
 
-.place-image{
-  
+.coordinatesError{
+  font-weight: bold;
+  font-size: 1.3rem;
+}
+
+.coordinatesError__emoji {
+  font-size: 2rem;
 }

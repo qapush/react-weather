@@ -3,6 +3,8 @@ import './app.css';
 import Weather from '../../services/get-weather';
 import LocationSearchInput from '../../services/location-autocomplete';
 import Places from '../../services/places-api';
+import GetCurrentLocation from '../../services/get-current-location';
+import Spinner from '../spinner';
 import { Container, Row, Col } from 'reactstrap';
 import PlaceHeader from '../place-header';
 import Card from '../card';
@@ -13,42 +15,19 @@ export default class App extends Component {
     data: null,
     loading: true,
     placeCoordinates: null,
-    localCoordinatesInUse: false,
+    localCoordinatesError:false,
     placePhotoRef: null,
     ak: null
   }
 
   weather = new Weather();
   places = new Places();
+  location = new GetCurrentLocation();
 
   componentDidMount(){
-
-    let options = {
-      enableHighAccuracy: true,
-      timeout: 5000,
-      maximumAge: 0
-    };
-
-    let success = (pos) => {
-      let lat = pos.coords.latitude,
-          lng = pos.coords.longitude;
-      this.setState({
-        localCoordinatesInUse: true
-      })   
-      this.updateWeather(lat, lng);
-    }
-    
-    function error(err) {
-      console.warn(`ERROR(${err.code}): ${err.message}`);
-    }
-    
-    navigator.geolocation.getCurrentPosition(success, error, options);
-
+    this.location.getUserLocation().then(res => console.log(res))
   }
 
-  componentDidUpdate(){
-  }
-  
   updateWeather = (lat, lng) => {
 
     this.weather.sixteenDaysForecast(lat, lng)
@@ -60,8 +39,7 @@ export default class App extends Component {
 
   placeSelectedHandler = (selectedPlace) => {
     this.setState({
-      placeCoordinates: selectedPlace,
-      localCoordinatesInUse: false
+      placeCoordinates: selectedPlace
     })
 
     
@@ -82,7 +60,7 @@ export default class App extends Component {
 
   render(){
 
-    const { loading, placePhotoRef, ak, placeCoordinates } = this.state;
+    const { loading, placePhotoRef, ak, placeCoordinates, localCoordinatesError } = this.state;
     
 
     let url, place;
@@ -106,12 +84,22 @@ export default class App extends Component {
           { placePhotoRef ? <PlaceHeader url={url} place={ place }/> : null }
           </Col>
         </Row>
+        { localCoordinatesError ? 
+          <Row className="mt-5">
+            <Col className="text-center">
+              <p className="coordinatesError">
+                Nie mamy dostępu do Twojej lokalizacji&nbsp;&nbsp;<span className="coordinatesError__emoji">🔎</span>
+              </p> 
+            </Col>
+          </Row>
+          : null }
         <Row>
-          <Col className="m-5 d-flex justify-content-center">
+          <Col className="mt-5 d-flex justify-content-center">
             <LocationSearchInput onPlaceSelected={ this.placeSelectedHandler }/> 
           </Col>
         </Row>
-        <Row>
+        { loading ? <Spinner/> : null }
+        <Row className="mt-5">
           { loading ? null : <Cards data={ this.state.data } /> }
         </Row>
        </Container>
@@ -133,7 +121,7 @@ const Cards = ({data}) => {
   
   return(
     <>
-      { days }
+        { days }
     </>
   )
 
