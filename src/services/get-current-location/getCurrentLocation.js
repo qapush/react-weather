@@ -1,31 +1,20 @@
-import { Component } from "react";
 
-export default class GetCurrentLocation extends Component {
-
-    options = {
-      enableHighAccuracy: true,
-      timeout: 5000,
-      maximumAge: 0
-    };
-
-    success = (pos) => {
+const Location = async () => {
       
-      let lat = pos.coords.latitude,
-          lng = pos.coords.longitude;
+    const options = {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0
+      };
+
     
-        console.log({lat, lng}); 
-    }
-    
-    error = (err) => {
-    }
-    
-    getUserLocation = () => {
-        return new Promise((success, error) => {
-            navigator.geolocation.getCurrentPosition(this.success, this.error, this.options);
-        })
+      let coordPromise = await new Promise((success, error) => {
+          navigator.geolocation.getCurrentPosition(success, error, options);
+      });
+
+      return coordPromise.coords;
+     
     }
 
-}
 
-
-
+export default Location;

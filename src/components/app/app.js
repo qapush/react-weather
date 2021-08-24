@@ -3,7 +3,7 @@ import './app.css';
 import Weather from '../../services/get-weather';
 import LocationSearchInput from '../../services/location-autocomplete';
 import Places from '../../services/places-api';
-import GetCurrentLocation from '../../services/get-current-location';
+import Location from '../../services/get-current-location';
 import Spinner from '../spinner';
 import { Container, Row, Col } from 'reactstrap';
 import PlaceHeader from '../place-header';
@@ -17,15 +17,29 @@ export default class App extends Component {
     placeCoordinates: null,
     localCoordinatesError:false,
     placePhotoRef: null,
-    ak: null
+    ak: null,
+    currentCoordinates: {
+      lat: null,
+      lng: null
+    }
   }
 
   weather = new Weather();
   places = new Places();
-  location = new GetCurrentLocation();
 
   componentDidMount(){
-    this.location.getUserLocation().then(res => console.log(res))
+      
+    Location().then(resp => {
+      this.setState({
+        currentCoordinates: {
+          lat: resp.latitude,
+          lng: resp.longitude
+        }
+      })
+
+      this.updateWeather(this.state.currentCoordinates.lat, this.state.currentCoordinates.lng)
+    })
+
   }
 
   updateWeather = (lat, lng) => {
@@ -48,7 +62,6 @@ export default class App extends Component {
           placePhotoRef: resp.result.photos[0].photo_reference,
           ak: this.places.ak
         }));
-        // .then(resp => console.log(resp));
 
     const lat = selectedPlace.geometry.location.lat()
     const lng = selectedPlace.geometry.location.lng()

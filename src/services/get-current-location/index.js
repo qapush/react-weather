@@ -1,2 +1,2 @@
-import GetCurrentLocation from './getCurrentLocation';
-export default GetCurrentLocation;
+import Location from './getCurrentLocation';
+export default Location;
