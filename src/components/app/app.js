@@ -13,7 +13,7 @@ export default class App extends Component {
 
   state = {
     data: null,
-    loading: true,
+    loading: false,
     placeCoordinates: null,
     localCoordinatesError:false,
     placePhotoRef: null,
@@ -28,7 +28,13 @@ export default class App extends Component {
   places = new Places();
 
   componentDidMount(){
-      
+    // console.log(this.state);
+  }
+
+  useCurrentLocation = () => {
+    this.setState({
+      loading:true
+    })
     Location().then(resp => {
       this.setState({
         currentCoordinates: {
@@ -39,7 +45,6 @@ export default class App extends Component {
 
       this.updateWeather(this.state.currentCoordinates.lat, this.state.currentCoordinates.lng)
     })
-
   }
 
   updateWeather = (lat, lng) => {
@@ -53,7 +58,8 @@ export default class App extends Component {
 
   placeSelectedHandler = (selectedPlace) => {
     this.setState({
-      placeCoordinates: selectedPlace
+      placeCoordinates: selectedPlace,
+      loading: true
     })
 
     
@@ -67,13 +73,11 @@ export default class App extends Component {
     const lng = selectedPlace.geometry.location.lng()
     this.updateWeather(lat, lng);
 
-
-    
   }
 
   render(){
 
-    const { loading, placePhotoRef, ak, placeCoordinates, localCoordinatesError } = this.state;
+    const { loading, placePhotoRef, ak, placeCoordinates, localCoordinatesError, data } = this.state;
     
 
     let url, place;
@@ -107,13 +111,21 @@ export default class App extends Component {
           </Row>
           : null }
         <Row>
-          <Col className="mt-5 d-flex justify-content-center">
+          <Col className="mt-5 d-flex flex-column">
             <LocationSearchInput onPlaceSelected={ this.placeSelectedHandler }/> 
+            <button 
+              className="btn btn-primary m-auto mt-3 p-2"
+              style={{
+                "backgroungColor":"rgb(8 161 237 / 15%)"
+              }}
+              onClick={ this.useCurrentLocation }>
+                Użyj mojej lokalizacji 	&#128205;
+            </button>
           </Col>
         </Row>
         { loading ? <Spinner/> : null }
         <Row className="mt-5">
-          { loading ? null : <Cards data={ this.state.data } /> }
+          { data && !loading ? <Cards data={ data } /> : null }
         </Row>
        </Container>
      </>
