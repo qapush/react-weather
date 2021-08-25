@@ -15,12 +15,16 @@ export default class App extends Component {
     data: null,
     loading: false,
     placeCoordinates: null,
+    placeId: null,
     localCoordinatesError:false,
     placePhotoRef: null,
     ak: null,
-    currentCoordinates: {
-      lat: null,
-      lng: null
+    currentLocation: {
+      inUse: false,
+      coordinates: {
+        lat: null,
+        lng: null
+    }
     }
   }
 
@@ -28,23 +32,54 @@ export default class App extends Component {
   places = new Places();
 
   componentDidMount(){
-    // console.log(this.state);
+   
   }
 
   useCurrentLocation = () => {
+
     this.setState({
       loading:true
     })
+
     Location().then(resp => {
+
+      const lat = resp.latitude,
+            lng = resp.longitude
+
       this.setState({
-        currentCoordinates: {
+        currentLocation: {
           lat: resp.latitude,
           lng: resp.longitude
         }
       })
+      
+      this.updateWeather(lat, lng)
 
-      this.updateWeather(this.state.currentCoordinates.lat, this.state.currentCoordinates.lng)
+      this.places.reverseGeolocation(lat, lng)
+          .then(res => {
+            const currentLocation = {...this.state.currentLocation}
+            currentLocation.name = res.placeName;
+            currentLocation.inUse = true;
+            this.setState(
+              { 
+                currentLocation,
+                placeId: res.placeId
+              }
+              )
+          })
     })
+
+    this.places.getPhotoUrl(this.state.place_id)
+      .then(resp => {
+          this.setState({
+            placePhotoRef: resp,
+            ak: this.places.ak
+          })
+    });
+
+
+
+
   }
 
   updateWeather = (lat, lng) => {
@@ -57,17 +92,24 @@ export default class App extends Component {
   }
 
   placeSelectedHandler = (selectedPlace) => {
+    
+    const currentLocation = {...this.state.currentLocation}
+    currentLocation.inUse = false;
+
     this.setState({
       placeCoordinates: selectedPlace,
-      loading: true
+      loading: true,
+      currentLocation: currentLocation
     })
 
     
     this.places.getPhotoUrl(selectedPlace.place_id)
-        .then(resp => this.setState({
-          placePhotoRef: resp.result.photos[0].photo_reference,
-          ak: this.places.ak
-        }));
+      .then(resp => {
+          this.setState({
+            placePhotoRef: resp,
+            ak: this.places.ak
+          })
+    });
 
     const lat = selectedPlace.geometry.location.lat()
     const lng = selectedPlace.geometry.location.lng()
@@ -77,7 +119,7 @@ export default class App extends Component {
 
   render(){
 
-    const { loading, placePhotoRef, ak, placeCoordinates, localCoordinatesError, data } = this.state;
+    const { loading, placePhotoRef, ak, placeCoordinates, localCoordinatesError, data, currentLocation } = this.state;
     
 
     let url, place;
@@ -86,6 +128,10 @@ export default class App extends Component {
       const { address_components } = placeCoordinates;
       place = address_components[0].long_name;
     };
+
+    if(currentLocation.inUse){
+      place = currentLocation.name;
+    }
 
     
     if(placePhotoRef){
@@ -98,7 +144,7 @@ export default class App extends Component {
         <Row>
           <Col className="text-center">
             { this.state.placePhotoRef ? <Img placePhotoRef={this.state.placePhotoRef} ak={this.state.ak}/> : null }
-          { placePhotoRef ? <PlaceHeader url={url} place={ place }/> : null }
+          { place ? <PlaceHeader url={url} place={ place }/> : null }
           </Col>
         </Row>
         { localCoordinatesError ? 
