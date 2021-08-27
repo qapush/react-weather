@@ -1,17 +1,16 @@
 import { Component } from 'react';
 import './locationLookup.css';
-
-import PlacesAutocomplete, {
-    geocodeByAddress,
-  } from 'react-places-autocomplete';
+import Places from '../places-api';
+import PlacesAutocomplete, { geocodeByAddress } from 'react-places-autocomplete';
    
   export default class LocationSearchInput extends Component {
-    constructor(props) {
+    constructor(props) { 
       super(props);
       this.state = { address:'' };
-      
+      this.places = new Places();
     }
-   
+    
+  
     handleChange = address => {
       this.setState({ address });
     };
@@ -21,7 +20,12 @@ import PlacesAutocomplete, {
         address:''
       })
       geocodeByAddress(address)
-        .then(results => this.props.onPlaceSelected(results[0]))
+        .then(results => {
+          this.places.selectedPlaceData(results)
+              .then(res => {
+                this.props.onPlaceSelected(res);
+              })
+        })
         .catch(error => console.error('Error', error));
     };
 
