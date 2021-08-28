@@ -1,0 +1,39 @@
+.hoursInner {
+    flex-wrap: nowrap;
+    overflow-x: scroll;
+}
+
+.hourCard {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    margin: 0.5em;
+    padding: 0.5em 1rem;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    min-width: 120px;
+}
+
+.hour__title {
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-bottom: 0rem;
+    color: rgb(162, 73, 88);
+}
+
+.hour__hr {
+    width: 100%;
+}
+
+.hour__temp {
+    font-weight: bold;
+    font-size: 1.5rem;
+    margin-bottom: 0;
+}
+
+.hour__feels-like {
+    font-size: 0.8rem;
+    color: grey;
+}

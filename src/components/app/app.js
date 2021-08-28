@@ -6,7 +6,8 @@ import Places from '../../services/places-api';
 import Spinner from '../spinner';
 import { Container, Row, Col } from 'reactstrap';
 import PlaceHeader from '../place-header';
-import Card from '../card';
+import DayCards from '../day-cards';
+import HourlyForecast from '../hourly-forecast';
 
 export default class App extends Component {
 
@@ -17,16 +18,24 @@ export default class App extends Component {
       name:null,
       placeId: null,
       photoUrl: null,
-      weatherData: null
+      weatherData: null,
+      hourlyData: null
     }
 
   weather = new Weather();
   places = new Places();
 
+  componentDidUpdate(){
+    // if(this.state.hourlyData)console.log(this.state.hourlyData);
+  }
+  componentDidMount(){
+    this.useCurrentLocation()
+  }
+
   useCurrentLocation = () => {
 
     this.setState({loading:true})
-
+      this.setState({hourlyData:null})
       this.places.currentLocation()
           .then(res => {
             this.setState(
@@ -41,36 +50,46 @@ export default class App extends Component {
     this.setState(
       { 
         ...selectedPlace, 
-        loading: true 
+        loading: true,
+        hourlyData: null
       })
       this.updateWeather( selectedPlace.lat, selectedPlace.lng );
   }
 
   updateWeather = (lat, lng) => {
 
-    this.weather.sixteenDaysForecast(lat, lng)
+    this.weather.getWeather(lat, lng)
         .then(res => this.setState({
           weatherData: res.data,
           loading: false
         }));
   }
 
+  daySelected = (itm) => {
+    const date = new Date(itm.datetime).getDate();
+    this.weather.getHeourlyWeather(this.state.lat, this.state.lng, date)
+        .then(res => this.setState({
+          hourlyData: res
+        }))
+  }
+
   render(){
 
-    const { loading, name, photoUrl, weatherData  } = this.state;
+    const { loading, name, photoUrl, weatherData, hourlyData  } = this.state;
   
     return (
      <>
        <Container>
         <Row>
           <Col className="text-center">
-            { photoUrl ? <Img placePhotoRef={photoUrl} /> : null }
-          { name ? <PlaceHeader url={photoUrl} place={ name }/> : null }
+            { name ? <PlaceHeader url={photoUrl} place={ name }/> : null }
           </Col>
         </Row>
         <Row>
           <Col className="mt-5 d-flex flex-column">
+            
             <LocationSearchInput onPlaceSelected={ this.placeSelectedHandler }/> 
+            
             <button 
               className="btn btn-primary m-auto mt-3 p-2"
               style={{
@@ -79,44 +98,16 @@ export default class App extends Component {
               onClick={ this.useCurrentLocation }>
                 Użyj mojej lokalizacji 	&#128205;
             </button>
+            
           </Col>
         </Row>
-        { loading ? <Spinner/> : null }
-        <Row className="mt-5">
-          { weatherData && !loading ? <Cards data={ weatherData } /> : null }
-        </Row>
+          { loading ? <Spinner/> : null }
+        
+        { weatherData && !loading ? <DayCards data={ weatherData } daySelected={ this.daySelected }/> : null }
+        { hourlyData ? <HourlyForecast hourlyData={ this.state.hourlyData }/> : null}
        </Container>
      </>
      );
   }
-}
-
-const Cards = ({data}) => {
-  
-  const days = data.map((item, index) => {
-    return(
-      <Card 
-        key={ index }
-        item={ item } 
-      />
-    )
-  })
-  
-  return(
-    <>
-        { days }
-    </>
-  )
-
-}
-
-const Img = ({placePhotoRef}) => {
-   return(
-    <div 
-      style={{ "backgroundImage":`url('${placePhotoRef}')` }}
-      className="place-image"
-    >
-    </div>
-   )
 }
 

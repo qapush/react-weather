@@ -1,17 +1,23 @@
-.weather-card {
-    background: rgb(8 161 237 / 15%);
+.dayCard {
+    flex-shrink: 0;
+    margin: 1em 0.2em 1.2em 0.2em;
+    padding: 0.5em 1.5em;
+    border: none;
+    background-color: rgba(8,161,237, 0.15);
     box-shadow: none;
     position: relative;
     bottom: 0px;
     transition: box-shadow 0.3s linear, 
                 bottom 0.3s ease-out, 
                 background 0.3s ease-out;
+    min-width: 200px;
+    cursor: pointer;
 }
 
-.weather-card:hover {
-    box-shadow: rgba(128, 128, 128, 0.3) 0px 0.5em 2rem;
+.dayCard:hover {
+    box-shadow: rgba(128, 128, 128, 0.3) 0px 0.5em 0.5rem;
     bottom: 5px;
-    background: rgb(8 161 237 / 25%);
+    background: rgb(8 161 237 / 10%);
 }
 
 .card__image {
@@ -20,7 +26,7 @@
     transition: 0.3s linear, 
 }
 
-.weather-card:hover .card__image{
+.dayCard:hover .card__image{
     transform: scale(1);
 }
 
@@ -38,4 +44,9 @@
     font-size: 1rem;
     font-weight: bold;
     color: rgb(230, 133, 95);
+}
+
+.daysInner {
+    flex-wrap: nowrap;
+    overflow-x: scroll;
 }
