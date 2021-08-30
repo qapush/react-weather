@@ -15,7 +15,7 @@ function DayCards({ data, daySelected }){
                 key={ index }
                 index={ index }
                 item={ item }
-                onDaySelected={ onDaySelected(index) }
+                onDaySelected={ ()=> {onDaySelected(index)} }
                 />
             )
         }
