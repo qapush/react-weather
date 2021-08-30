@@ -26,7 +26,7 @@ export default class App extends Component {
   places = new Places();
 
   componentDidUpdate(){
-    // if(this.state.hourlyData)console.log(this.state.hourlyData);
+
   }
   componentDidMount(){
     this.useCurrentLocation()
