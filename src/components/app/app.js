@@ -7,7 +7,9 @@ import Spinner from '../spinner';
 import { Container, Row, Col } from 'reactstrap';
 import PlaceHeader from '../place-header';
 import DayCards from '../day-cards';
-import HourlyForecast from '../hourly-forecast';
+import HourlyForecast from '../hourly-forecast';  
+
+
 
 export default class App extends Component {
 
@@ -28,7 +30,8 @@ export default class App extends Component {
   componentDidUpdate(){
 
   }
-  componentDidMount(){
+  componentDidMount() {
+    console.log(process.env.WEATHER_API)
     this.useCurrentLocation()
   }
 

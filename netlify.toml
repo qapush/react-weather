@@ -1,3 +1,10 @@
 [build]
 command = 'npm run build'
 functions = 'functions'
+
+[[redirects]]
+  from = "/api/weather/*"
+  to = "/.netlify/functions/weather/:splat"
+[[redirects]]
+  from = "/api/places/*"
+  to = "/.netlify/functions/places/:splat"
