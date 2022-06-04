@@ -71,9 +71,9 @@ export default class App extends Component {
       });
   }
 
-  daySelected = (itm) => {
-    const date = new Date(itm.datetime).getDate();
-    this.weather.getHeourlyWeather(this.state.lat, this.state.lng, date)
+  daySelected = (item) => {
+    const date = new Date(item.datetime).getDate();
+    this.weather.getHourlyWeather(this.state.lat, this.state.lng, date)
         .then(res => this.setState({
           hourlyData: res
         }))

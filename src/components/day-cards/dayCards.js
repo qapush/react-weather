@@ -3,10 +3,6 @@ import './dayCards.css';
 
 function DayCards({ data, daySelected }){
 
-    const onDaySelected = (itm) => {
-        daySelected(itm);
-    }
-
     const days = data.map((item, index) => {
         
         if(index < 5) {
@@ -15,7 +11,7 @@ function DayCards({ data, daySelected }){
                 key={ index }
                 index={ index }
                 item={ item }
-                onDaySelected={ ()=> {onDaySelected(index)} }
+                onDaySelected={ () => {daySelected(item)} }
                 />
             )
         }

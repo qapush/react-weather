@@ -7,7 +7,7 @@ export default class HourlyForecast extends Component{
     render(){
 
         const data = this.props.hourlyData;
-        console.log(data);
+
         const hours = data.map((item, index) => {
             return(
                 <div className="hourCard" key={index}>
@@ -30,7 +30,7 @@ export default class HourlyForecast extends Component{
             <Col className="mt-4 mb-4 text-center">
                 <h2 className="mb-5">Prognoza godzinowa:</h2>
                 <div className="hoursInner d-flex justify-content-xl-center">
-                    { hours }
+                    { data.length === 0 ?  'Nie ma danych' : hours }
                 </div>
             </Col>
             

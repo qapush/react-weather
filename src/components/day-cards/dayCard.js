@@ -40,6 +40,7 @@ function DayCard({item, onDaySelected}) {
         day = dni[date.getDay()]
     }
 
+
         
         return(
             <Card 
