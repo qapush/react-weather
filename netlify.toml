@@ -8,3 +8,6 @@ functions = 'functions'
 [[redirects]]
   from = "/api/places/*"
   to = "/.netlify/functions/places/:splat"
+
+  [functions]
+  node_bundler = "esbuild"

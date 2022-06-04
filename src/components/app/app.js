@@ -31,7 +31,6 @@ export default class App extends Component {
 
   }
   componentDidMount() {
-    console.log(process.env.WEATHER_API)
     this.useCurrentLocation()
   }
 
@@ -62,10 +61,14 @@ export default class App extends Component {
   updateWeather = (lat, lng) => {
 
     this.weather.getWeather(lat, lng)
-        .then(res => this.setState({
-          weatherData: res.data,
-          loading: false
-        }));
+      .then(res => {
+        if (res !== undefined) {
+          this.setState({
+            weatherData: res.data,
+            loading: false
+          })
+        }
+      });
   }
 
   daySelected = (itm) => {

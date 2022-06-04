@@ -48,7 +48,7 @@ export default class Places extends Component {
 
     
       let coordPromise = await new Promise((success, error) => {
-          navigator.geolocation.getCurrentPosition(success, error, options);
+        navigator.geolocation.getCurrentPosition(success, error, options)
       });
 
       return coordPromise.coords;
