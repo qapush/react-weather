@@ -18,7 +18,7 @@ export default class Weather {
         
         let selectedDayWeather;
 
-        const res = await fetch(`api/weather/hourly/?lat=${lat}&lng=${lng}`)
+        await fetch(`api/weather/hourly/?lat=${lat}&lng=${lng}`)
         .then(res => res.json())
         .then(res => {
         selectedDayWeather = res.list.filter(item => {
