@@ -43,7 +43,7 @@ export default class App extends Component {
             this.setState(
               { ...res }
             )
-            // this.updateWeather(res.lat, res.lng);
+            this.updateWeather(res.lat, res.lng);
           });
 
   }
