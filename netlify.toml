@@ -13,5 +13,9 @@ functions = 'functions'
   from = "/api/places/*"
   to = "/.netlify/functions/places/:splat"
 
+[[redirects]]
+  from = "/api/place-photo/*"
+  to = "/.netlify/functions/photo-url/:splat"
+
   [functions]
   node_bundler = "esbuild"

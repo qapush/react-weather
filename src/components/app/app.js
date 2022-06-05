@@ -15,7 +15,7 @@ export default class App extends Component {
 
   state = {
       loading: false,
-      lan: null,
+      lat: null,
       lng: null,
       name:null,
       placeId: null,
@@ -31,7 +31,7 @@ export default class App extends Component {
 
   }
   componentDidMount() {
-    this.useCurrentLocation()
+    // this.useCurrentLocation()
   }
 
   useCurrentLocation = () => {
@@ -43,7 +43,7 @@ export default class App extends Component {
             this.setState(
               { ...res }
             )
-            this.updateWeather(res.lat, res.lng);
+            // this.updateWeather(res.lat, res.lng);
           });
 
   }
